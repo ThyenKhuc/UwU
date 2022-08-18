@@ -1,15 +1,15 @@
 const textConfig = {
   text1: "Chào eim",
   text2: "Tớ có điều này muốn hỏi cậu nhớ phải trả lời thật lòng nhaaa.",
-  text3: "Cậu thích tớ phải hong:>",
+  text3: "Cậu sẽ gia nhập NMC cùng chúng tớ chứ?",
   text4: "Nếu cậu ko trả lời mà thoát ra tức là muốn làm người yêu tớ rồi nhaaaa",
-  text5: "Đéo :)",
-  text6: "Yêu ơi là yêu <3",
-  text7: "lí do cậu thích tớ đi :vvvv",
-  text8: "Gửi cho tớ <3",
-  text9: "Vì cậu đẹp try vlllll",
+  text5: "Không, cảm ơn.",
+  text6: "Tất nhiên là có",
+  text7: "lí do cậu muốn gia nhập nè",
+  text8: "Gửi cho chúng tớ <3",
+  text9: "Vì bạn Kiên đtrai vlllll",
   text10: "Tớ biết thừa mà:))))))",
-  text11: " giờ thì chờ gì nữa mà ko inbox cho tớ đi nàooo",
+  text11: " giờ thì chờ gì nữa mà ko inbox cho chúng tớ đi nàooo",
   text12: "okee",
 };
 
@@ -137,7 +137,7 @@ $(document).ready(function () {
           text: textConfig.text11,
           confirmButtonColor: "#83d0c9",
           onClose: () => {
-            window.location = "https://www.facebook.com/Thyen.Khuc.545/";
+            window.location = "https://www.facebook.com/thptnguyenvancuinhanoi";
           },
         });
       }
