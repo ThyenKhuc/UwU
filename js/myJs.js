@@ -7,7 +7,7 @@ const textConfig = {
   text6: "Tất nhiên là có",
   text7: "lí do cậu muốn gia nhập nè",
   text8: "Gửi cho chúng tớ <3",
-  text9: "Vì bạn Kiên ban design đtrai vlllll áaaaaa",
+  text9: "Vì bạn Kiên ban design đtrai vccccc áaaaaa",
   text10: "Tớ biết thừa mà:))))))",
   text11: " giờ thì chờ gì nữa mà ko inbox cho chúng tớ đi nàooo",
   text12: "okee",
