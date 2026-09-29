@@ -40,6 +40,8 @@ $(document).ready(function () {
       background: '#fff url("img/iput-bg.jpg")',
       imageAlt: "Custom image",
     }).then(function () {
+      var audio = new Audio("sound/background.mp3");
+    audio.play();
       $(".content").show(200);
     });
   }
