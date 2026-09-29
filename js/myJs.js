@@ -1,4 +1,4 @@
-const textConfig = {
+const text = {
 text1: "Chào eim",
 text2: "Tớ có điều này muốn hỏi cậu nhớ phải trả lời thật lòng nhaaa.",
 text3: "Cậu đồng ý làm ni tớ nhe=)))",
@@ -10,409 +10,181 @@ text8: "Gửi cho tớ <3",
 text9: "Vì cậu đẹp try vlllll",
 text10: "Tớ biết thừa mà:))))))",
 text11: " giờ thì chờ gì nữa mà ko inbox cho tớ đi nàooo",
-text12: "okee",
+text12: "okee"
 };
 
-$(document).ready(function () {
+$(function () {
 
-const bgMusic = document.getElementById("bgMusic");
+const music = $("#bgMusic")[0];
+music.volume = 0.5;
 
-// Âm lượng từ 0 đến 1
-bgMusic.volume = 0.9;
-
-// Tránh gọi play nhiều lần
-let musicStarted = false;
-
-function playBackgroundMusic() {
-
-```
-if (musicStarted) {
-  return;
+function playMusic() {
+music.play().catch(() => {});
 }
 
-const playPromise = bgMusic.play();
+// Phát nhạc sau tương tác đầu tiên
+$(document).one("click touchstart keydown", playMusic);
 
-if (playPromise !== undefined) {
+// Nội dung
+$("#text3").html(text.text3);
+$("#text4").html(text.text4);
+$("#yes").html(text.text6);
+$("#no").html(text.text5);
 
-  playPromise
-    .then(function () {
-
-      musicStarted = true;
-
-      console.log("Background music started.");
-
-    })
-    .catch(function (error) {
-
-      console.log(
-        "Không thể tự động phát nhạc:",
-        error
-      );
-
-    });
-}
-```
-
-}
-
-
-setTimeout(function () {
-
-```
+// Loading
+setTimeout(() => {
 firstQuestion();
-
 $(".spinner").fadeOut();
-
-$("#preloader")
-  .delay(350)
-  .fadeOut("slow");
-
-$("body")
-  .delay(350)
-  .css({
-    overflow: "visible",
-  });
-```
-
+$("#preloader").delay(350).fadeOut("slow");
+$("body").delay(350).css("overflow", "visible");
 }, 600);
 
-
-$("#text3").html(textConfig.text3);
-
-$("#text4").html(textConfig.text4);
-
-$("#no").html(textConfig.text5);
-
-$("#yes").html(textConfig.text6);
-
-
+// Popup đầu tiên
 function firstQuestion() {
-
-```
 $(".content").hide();
 
+```
 Swal.fire({
-
-  title: textConfig.text1,
-
-  text: textConfig.text2,
-
+  title: text.text1,
+  text: text.text2,
   imageUrl: "img/cheems.jpg",
-
   imageWidth: 300,
-
   imageHeight: 300,
-
-  background: '#fff url("img/iput-bg.jpg")',
-
-  imageAlt: "Custom image",
-
-}).then(function () {
-
-  /*
-   * Người dùng vừa tương tác với popup.
-   * Đây là thời điểm thích hợp để trình duyệt
-   * cho phép phát nhạc.
-   */
-
-  playBackgroundMusic();
-
+  background: '#fff url("img/iput-bg.jpg")'
+}).then(() => {
+  playMusic();
   $(".content").show(200);
-
 });
 ```
 
 }
 
+// Âm thanh phụ
+function sound(file) {
+new Audio(file).play().catch(() => {});
+}
 
+// Đổi vị trí 2 nút
 function switchButton() {
+sound("sound/duck.mp3");
 
 ```
-// Âm thanh khi nút chạy
-const audio = new Audio("sound/duck.mp3");
+const no = $("#no");
+const yes = $("#yes");
 
-audio.play().catch(function (error) {
-  console.log("Không thể phát duck.mp3:", error);
+const noPos = {
+  left: no.css("left"),
+  top: no.css("top")
+};
+
+no.css({
+  left: yes.css("left"),
+  top: yes.css("top")
 });
 
-
-const leftNo = $("#no").css("left");
-
-const topNo = $("#no").css("top");
-
-const leftYes = $("#yes").css("left");
-
-const topYes = $("#yes").css("top");
-
-
-$("#no").css("left", leftYes);
-
-$("#no").css("top", topYes);
-
-$("#yes").css("left", leftNo);
-
-$("#yes").css("top", topNo);
+yes.css(noPos);
 ```
 
 }
 
-
-
+// Di chuyển nút NO
 function moveButton() {
+sound("sound/duck.mp3");
 
 ```
-// Âm thanh khi nút chạy
-const audio = new Audio("sound/duck.mp3");
+const maxX = screen.width <= 600 ? 300 : 500;
 
-audio.play().catch(function (error) {
-  console.log("Không thể phát duck.mp3:", error);
+$("#no").css({
+  left: Math.random() * maxX + "px",
+  top: Math.random() * 500 + "px"
 });
-
-
-let x;
-let y;
-
-
-if (screen.width <= 600) {
-
-  x = Math.random() * 300;
-
-  y = Math.random() * 500;
-
-} else {
-
-  x = Math.random() * 500;
-
-  y = Math.random() * 500;
-
-}
-
-
-const left = x + "px";
-
-const top = y + "px";
-
-
-$("#no").css("left", left);
-
-$("#no").css("top", top);
 ```
 
 }
-
-// ==================================================
-// NO BUTTON
-// ==================================================
 
 let n = 0;
 
-$("#no").mousemove(function () {
+$("#no").on("mousemove", function () {
+if (n < 1) {
+switchButton();
+} else {
+moveButton();
+}
 
 ```
-if (n < 1) {
-
-  switchButton();
-
-}
-
-
-if (n > 1) {
-
-  moveButton();
-
-}
-
-
 n++;
 ```
 
 });
 
-$("#no").click(function () {
+$("#no").on("click", function () {
+playMusic();
 
 ```
-// Đảm bảo nhạc đã được kích hoạt
-playBackgroundMusic();
-
-
 if (screen.width >= 900) {
-
   switchButton();
-
 }
 ```
 
 });
 
-// ==================================================
-// GENERATE TEXT IN INPUT
-// ==================================================
-
-function textGenerate() {
+// Nút YES
+$("#yes").on("click", function () {
 
 ```
-let n = "";
-
-const text = " " + textConfig.text9;
-
-const a = Array.from(text);
-
-
-const textVal = $("#txtReason").val()
-  ? $("#txtReason").val()
-  : "";
-
-
-const count = textVal.length;
-
-
-if (count > 0) {
-
-  for (let i = 1; i <= count; i++) {
-
-    n = n + a[i];
-
-
-    if (i == text.length + 1) {
-
-      $("#txtReason").val("");
-
-      n = "";
-
-      break;
-
-    }
-
-  }
-
-}
-
-
-$("#txtReason").val(n);
-```
-
-}
-
-// ==================================================
-// YES BUTTON
-// ==================================================
-
-$("#yes").click(function () {
-
-```
-// Đảm bảo nhạc nền đang phát
-playBackgroundMusic();
-
-
-// Âm thanh tick
-const audio = new Audio("sound/tick.mp3");
-
-audio.play().catch(function (error) {
-
-  console.log(
-    "Không thể phát tick.mp3:",
-    error
-  );
-
-});
-
-
-// ==================================================
-// FIRST POPUP
-// ==================================================
+playMusic();
+sound("sound/tick.mp3");
 
 Swal.fire({
-
-  title: textConfig.text7,
-
+  title: text.text7,
   width: 900,
-
   padding: "3em",
-
   html:
-    "<input type='text' class='form-control' " +
-    "id='txtReason' placeholder='Whyyy'>",
-
-  background:
-    '#fff url("img/iput-bg.jpg")',
-
+    '<input type="text" class="form-control" id="txtReason" placeholder="Whyyy">',
+  background: '#fff url("img/iput-bg.jpg")',
   backdrop: `
     rgba(0,0,123,0.4)
     url("img/giphy2.gif")
     left top
     no-repeat
   `,
-
   showCancelButton: false,
-
   confirmButtonColor: "#fe8a71",
-
-  cancelButtonColor: "#f6cd61",
-
-  confirmButtonText: textConfig.text8,
-
-}).then(function (result) {
-
-  // ==================================================
-  // SECOND POPUP
-  // ==================================================
+  confirmButtonText: text.text8
+}).then(result => {
 
   if (result.value) {
 
     Swal.fire({
-
       width: 900,
-
-      confirmButtonText:
-        textConfig.text12,
-
-      background:
-        '#fff url("img/iput-bg.jpg")',
-
-      title:
-        textConfig.text10,
-
-      text:
-        textConfig.text11,
-
-      confirmButtonColor:
-        "#83d0c9",
-
-      onClose: function () {
-
-        window.location =
-          "https://www.facebook.com/kiekhh/";
-
-      },
-
+      title: text.text10,
+      text: text.text11,
+      confirmButtonText: text.text12,
+      confirmButtonColor: "#83d0c9",
+      background: '#fff url("img/iput-bg.jpg")',
+      onClose: () => {
+        location.href = "https://www.facebook.com/kiekhh/";
+      }
     });
 
   }
+});
+```
 
 });
 
+// Tự điền lý do
+$(document).on("input", "#txtReason", function () {
 
-// ==================================================
-// AUTO GENERATE INPUT TEXT
-// ==================================================
+```
+const value = $(this).val();
+const answer = text.text9;
 
-$("#txtReason").focus(function () {
-
-  const handleWriteText =
-    setInterval(function () {
-
-      textGenerate();
-
-    }, 10);
-
-
-  $("#txtReason").blur(function () {
-
-    clearInterval(handleWriteText);
-
-  });
-
-});
+if (value.length >= answer.length) {
+  $(this).val("");
+} else if (value.length > 0) {
+  $(this).val(answer.substring(0, value.length));
+}
 ```
 
 });
