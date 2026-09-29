@@ -13,17 +13,47 @@ text11: " giờ thì chờ gì nữa mà ko inbox cho tớ đi nàooo",
 text12: "okee"
 };
 
-$(function () {
+// ================================
+// BACKGROUND MUSIC
+// ================================
 
-const music = $("#bgMusic")[0];
-music.volume = 0.5;
+const backgroundMusic = new Audio("sound/background.mp3");
+
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.5;
+
+let musicStarted = false;
 
 function playMusic() {
-music.play().catch(() => {});
+if (musicStarted) return;
+
+backgroundMusic.play()
+.then(() => {
+musicStarted = true;
+console.log("Background music is playing.");
+})
+.catch(error => {
+console.log("Cannot play background music:", error);
+});
 }
 
-// Phát nhạc sau tương tác đầu tiên
-$(document).one("click touchstart keydown", playMusic);
+// ================================
+// OTHER SOUNDS
+// ================================
+
+function playSound(file) {
+const audio = new Audio(file);
+
+audio.play().catch(error => {
+console.log("Cannot play sound:", file, error);
+});
+}
+
+// ================================
+// MAIN
+// ================================
+
+$(document).ready(function () {
 
 // Nội dung
 $("#text3").html(text.text3);
@@ -31,48 +61,74 @@ $("#text4").html(text.text4);
 $("#yes").html(text.text6);
 $("#no").html(text.text5);
 
-// Loading
-setTimeout(() => {
-firstQuestion();
-$(".spinner").fadeOut();
-$("#preloader").delay(350).fadeOut("slow");
-$("body").delay(350).css("overflow", "visible");
-}, 600);
+// ==================================
+// START MUSIC AFTER USER INTERACTION
+// ==================================
 
-// Popup đầu tiên
-function firstQuestion() {
-$(".content").hide();
+$(document).one(
+"click touchstart keydown",
+function () {
+playMusic();
+}
+);
+
+setTimeout(function () {
 
 ```
+$(".spinner").fadeOut();
+
+$("#preloader")
+  .delay(350)
+  .fadeOut("slow");
+
+$("body")
+  .delay(350)
+  .css("overflow", "visible");
+
+firstQuestion();
+```
+
+}, 600);
+
+function firstQuestion() {
+
+```
+$(".content").hide();
+
 Swal.fire({
   title: text.text1,
   text: text.text2,
   imageUrl: "img/cheems.jpg",
   imageWidth: 300,
   imageHeight: 300,
-  background: '#fff url("img/iput-bg.jpg")'
-}).then(() => {
+  imageAlt: "Custom image",
+  background: '#fff url("img/iput-bg.jpg")',
+  confirmButtonText: "OK"
+}).then(function () {
+
+  // Thử phát nhạc thêm một lần
   playMusic();
+
   $(".content").show(200);
+
 });
 ```
 
 }
 
-// Âm thanh phụ
-function sound(file) {
-new Audio(file).play().catch(() => {});
-}
+// ==================================
+// SWITCH BUTTON
+// ==================================
 
-// Đổi vị trí 2 nút
 function switchButton() {
-sound("sound/duck.mp3");
 
 ```
+playSound("sound/duck.mp3");
+
 const no = $("#no");
 const yes = $("#yes");
 
-const noPos = {
+const noPosition = {
   left: no.css("left"),
   top: no.css("top")
 };
@@ -82,45 +138,52 @@ no.css({
   top: yes.css("top")
 });
 
-yes.css(noPos);
+yes.css(noPosition);
 ```
 
 }
 
-// Di chuyển nút NO
 function moveButton() {
-sound("sound/duck.mp3");
 
 ```
+playSound("sound/duck.mp3");
+
 const maxX = screen.width <= 600 ? 300 : 500;
+const maxY = 500;
 
 $("#no").css({
   left: Math.random() * maxX + "px",
-  top: Math.random() * 500 + "px"
+  top: Math.random() * maxY + "px"
 });
 ```
 
 }
 
-let n = 0;
+// ==================================
+// NO BUTTON
+// ==================================
+
+let noCount = 0;
 
 $("#no").on("mousemove", function () {
-if (n < 1) {
-switchButton();
-} else {
-moveButton();
-}
 
 ```
-n++;
+if (noCount < 1) {
+  switchButton();
+} else {
+  moveButton();
+}
+
+noCount++;
 ```
 
 });
 
 $("#no").on("click", function () {
-playMusic();
 
 ```
+playMusic();
+
 if (screen.width >= 900) {
   switchButton();
 }
@@ -128,62 +191,100 @@ if (screen.width >= 900) {
 
 });
 
-// Nút YES
+// ==================================
+// YES BUTTON
+// ==================================
+
 $("#yes").on("click", function () {
 
 ```
+// Đảm bảo nhạc được phát
 playMusic();
-sound("sound/tick.mp3");
+
+// Tick sound
+playSound("sound/tick.mp3");
+
 
 Swal.fire({
+
   title: text.text7,
+
   width: 900,
+
   padding: "3em",
+
   html:
-    '<input type="text" class="form-control" id="txtReason" placeholder="Whyyy">',
-  background: '#fff url("img/iput-bg.jpg")',
+    '<input type="text" ' +
+    'class="form-control" ' +
+    'id="txtReason" ' +
+    'placeholder="Whyyy">',
+
+  background:
+    '#fff url("img/iput-bg.jpg")',
+
   backdrop: `
     rgba(0,0,123,0.4)
     url("img/giphy2.gif")
     left top
     no-repeat
   `,
+
   showCancelButton: false,
+
   confirmButtonColor: "#fe8a71",
+
   confirmButtonText: text.text8
-}).then(result => {
+
+}).then(function (result) {
 
   if (result.value) {
 
     Swal.fire({
+
       width: 900,
+
       title: text.text10,
+
       text: text.text11,
+
       confirmButtonText: text.text12,
+
       confirmButtonColor: "#83d0c9",
-      background: '#fff url("img/iput-bg.jpg")',
-      onClose: () => {
-        location.href = "https://www.facebook.com/kiekhh/";
+
+      background:
+        '#fff url("img/iput-bg.jpg")',
+
+      onClose: function () {
+
+        window.location.href =
+          "https://www.facebook.com/kiekhh/";
+
       }
+
     });
 
   }
+
 });
 ```
 
 });
 
-// Tự điền lý do
 $(document).on("input", "#txtReason", function () {
 
 ```
-const value = $(this).val();
-const answer = text.text9;
+const input = $(this);
+const length = input.val().length;
 
-if (value.length >= answer.length) {
-  $(this).val("");
-} else if (value.length > 0) {
-  $(this).val(answer.substring(0, value.length));
+if (length >= text.text9.length) {
+  input.val("");
+  return;
+}
+
+if (length > 0) {
+  input.val(
+    text.text9.substring(0, length)
+  );
 }
 ```
 
